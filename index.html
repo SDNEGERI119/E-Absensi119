@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-ABSENSI SDN 119 CIJAGRA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }  
+        
+        body {
+            background-image: url('https://drive.google.com/thumbnail?id=13R1H2OXUexUURNny8vCBloaYWTK0hdi9&sz=w2000');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: -1;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #b2b6b9a2 0%, #a3a7af 50%, #a6a7b1 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        
+        .digital-clock {
+            font-family: 'Poppins', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #1e40af, #1e3a8a);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
+            background: linear-gradient(45deg, #1d4ed8, #1e40af);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .form-section {
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        input, textarea, select {
+            background-color: rgba(255, 255, 255, 0.4) !important;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <div class="bg-white rounded-lg shadow-lg p-4 min-w-[300px]">
+            <div class="flex items-center">
+                <div id="notif-icon" class="mr-3"></div>
+                <div>
+                    <div id="notif-title" class="font-semibold text-gray-800"></div>
+                    <div id="notif-message" class="text-sm text-gray-600"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="glass-effect rounded-2xl p-8 shadow-2xl">
+                <h1 class="text-4xl font-bold text-slate-800 mb-4">E-ABSENSI</h1>
+                <h2 class="text-2xl font-semibold text-slate-600 mb-6">SDN 119 CIJAGRA</h2>
+                
+                <!-- Digital Clock -->
+                <div class="bg-gradient-to-r from-slate-700 to-slate-800 rounded-xl p-6 text-white shadow-lg">
+                    <div class="digital-clock text-3xl font-bold mb-2" id="digitalClock">00:00:00</div>
+                    <div class="text-lg" id="digitalDate">Senin, 1 Januari 2024</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Form -->
+        <div class="glass-effect rounded-2xl p-8 shadow-2xl">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">Form Absensi</h3>
+            
+            <form id="attendanceForm">
+                <!-- Employee Selection -->
+                <div class="mb-6">
+                    <label class="block text-slate-700 font-semibold mb-3">Pilih Nama:</label>
+                    <select id="employeeName" class="w-full p-4 border-2 border-slate-200 rounded-lg focus:border-slate-500 focus:outline-none transition-colors bg-white shadow-sm" required>
+                        <option value="">-- Pilih Nama --</option>
+                        <option value="RIZKI MUHAMMAD RAMDANI|Operator BOSP/ASET">RIZKI MUHAMMAD RAMDANI (Operator BOSP/ASET)</option>
+                        <option value="IIM MUTMAINAH|Operator/Pustakawati">IIM MUTMAINAH (Operator/Pustakawati)</option>
+                        <option value="AJI SOFIAN|Guru PAIBP">AJI SOFIAN (Guru PAIBP)</option>
+                        <option value="YAYANG RATNA JUWITA PERMATA SARI|Wali Kelas 6B">YAYANG RATNA JUWITA PERMATA SARI (Wali Kelas 6B)</option>
+                        <option value="AMELIA RIZKI AULIA|Wali Kelas 4B">AMELIA RIZKI AULIA (Wali Kelas 4B)</option>
+                        <option value="SUPRIATI|Laysus">SUPRIATI (Laysus)</option>
+			<option value="RIAN FEBRIANA|Satpam">RIAN FEBRIANA (Satpam)</option>
+                    </select>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Jam Masuk Section -->
+                    <div class="form-section bg-slate-50 p-6 rounded-xl">
+                        <h4 class="text-lg font-semibold text-slate-800 mb-4">Absen Masuk</h4>
+                        <div class="mb-4">
+                            <label class="block text-slate-600 font-medium mb-2">Tanggal:</label>
+                            <input type="text" id="dateIn" class="w-full p-3 bg-slate-100 border border-slate-300 rounded-lg shadow-sm" readonly>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-slate-600 font-medium mb-2">Jam Masuk:</label>
+                            <input type="text" id="timeIn" class="w-full p-3 bg-slate-100 border border-slate-300 rounded-lg shadow-sm" readonly>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-slate-600 font-medium mb-2">Keterangan:</label>
+                            <textarea id="keteranganMasuk" class="w-full p-3 border-2 border-slate-200 rounded-lg focus:border-slate-500 focus:outline-none transition-colors shadow-sm" rows="2" placeholder="Masukkan keterangan (opsional)"></textarea>
+                        </div>
+                        <button type="button" id="btnTimeIn" class="btn-primary w-full text-white py-3 px-6 rounded-lg font-semibold">
+                            KIRIM
+                        </button>
+                    </div>
+
+                    <!-- Jam Pulang Section -->
+                    <div class="form-section bg-slate-50 p-6 rounded-xl">
+                        <h4 class="text-lg font-semibold text-slate-800 mb-4">Absen Pulang</h4>
+                        <div class="mb-4">
+                            <label class="block text-slate-600 font-medium mb-2">Tanggal:</label>
+                            <input type="text" id="dateOut" class="w-full p-3 bg-slate-100 border border-slate-300 rounded-lg shadow-sm" readonly>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-slate-600 font-medium mb-2">Jam Pulang:</label>
+                            <input type="text" id="timeOut" class="w-full p-3 bg-slate-100 border border-slate-300 rounded-lg shadow-sm" readonly>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-slate-600 font-medium mb-2">Keterangan:</label>
+                            <textarea id="keteranganPulang" class="w-full p-3 border-2 border-slate-200 rounded-lg focus:border-slate-500 focus:outline-none transition-colors shadow-sm" rows="2" placeholder="Masukkan keterangan (opsional)"></textarea>
+                        </div>
+                        <button type="button" id="btnTimeOut" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 w-full text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-lg">
+                            KIRIM
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ajuan Izin/Sakit Section -->
+                <div class="mt-6">
+                    <div class="form-section bg-slate-50 p-6 rounded-xl">
+                        <h4 class="text-lg font-semibold text-slate-800 mb-4">Ajuan Izin/Sakit</h4>
+                        <textarea id="izinSakit" class="w-full p-3 border-2 border-slate-200 rounded-lg focus:border-slate-500 focus:outline-none transition-colors shadow-sm" rows="3" placeholder="Masukkan ajuan izin/sakit (opsional)"></textarea>
+                        <button type="button" id="btnIzinSakit" class="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 w-full text-white py-3 px-6 rounded-lg font-semibold mt-4 transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-lg">
+                            KIRIM
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Copyright -->
+        <div class="text-center mt-8">
+            <div class="glass-effect rounded-lg p-4">
+                <p class="text-slate-700 font-medium">© 2025 SDN 119 CIJAGRA KOTA BANDUNG. All Rights Reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Google Apps Script Web App URL - Sudah terhubung dengan Google Sheets
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyXUYbK1f6LMwGv3pNMwZzd-YhPXb1Do8nX9eKMeXfKF-F3kIo0BCC6i5NgHlYftcn0oQ/exec';
+        
+        // Update digital clock and date
+        function updateClock() {
+            const now = new Date();
+            
+            // Format time
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            
+            // Format date
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                           'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            const dayName = days[now.getDay()];
+            const day = now.getDate();
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            const dateString = `${dayName}, ${day} ${month} ${year}`;
+            
+            document.getElementById('digitalClock').textContent = timeString;
+            document.getElementById('digitalDate').textContent = dateString;
+            
+            // Update form date and time fields
+            const dateStr = `${day}/${String(now.getMonth() + 1).padStart(2, '0')}/${year}`;
+            document.getElementById('dateIn').value = dateStr;
+            document.getElementById('dateOut').value = dateStr;
+            document.getElementById('timeIn').value = timeString;
+            document.getElementById('timeOut').value = timeString;
+        }
+        
+        // Show notification
+        function showNotification(title, message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notif-icon');
+            const titleEl = document.getElementById('notif-title');
+            const messageEl = document.getElementById('notif-message');
+            
+            if (type === 'success') {
+                icon.innerHTML = '<div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg></div>';
+            } else {
+                icon.innerHTML = '<div class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></div>';
+            }
+            
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Send data to Google Sheets
+        async function sendToSheets(data) {
+            console.log('Mengirim data:', data);
+            
+            try {
+                // Method 1: POST dengan URLSearchParams (lebih kompatibel)
+                const params = new URLSearchParams();
+                params.append('type', data.type);
+                params.append('tanggal', data.tanggal);
+                params.append('nama', data.nama);
+                params.append('jamMasuk', data.jamMasuk || '');
+                params.append('jamPulang', data.jamPulang || '');
+                params.append('keterangan', data.keterangan || '');
+                params.append('izinSakit', data.izinSakit || '');
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: params.toString(),
+                    mode: 'no-cors'
+                });
+                
+                showNotification('Berhasil Dikirim!', 'Data absensi telah tersimpan', 'success');
+                console.log('Data berhasil dikirim via POST');
+                
+            } catch (error) {
+                console.error('POST Error:', error);
+                
+                // Method 2: GET dengan parameter (fallback)
+                try {
+                    const getParams = new URLSearchParams();
+                    getParams.append('type', data.type);
+                    getParams.append('tanggal', data.tanggal);
+                    getParams.append('nama', data.nama);
+                    getParams.append('jamMasuk', data.jamMasuk || '');
+                    getParams.append('jamPulang', data.jamPulang || '');
+                    getParams.append('keterangan', data.keterangan || '');
+                    getParams.append('izinSakit', data.izinSakit || '');
+                    
+                    const getUrl = `${SCRIPT_URL}?${getParams.toString()}`;
+                    console.log('Mencoba GET URL:', getUrl);
+                    
+                    // Gunakan fetch GET
+                    await fetch(getUrl, {
+                        method: 'GET',
+                        mode: 'no-cors'
+                    });
+                    
+                    showNotification('Berhasil Dikirim!', 'Data absensi telah tersimpan (GET)', 'success');
+                    console.log('Data berhasil dikirim via GET');
+                    
+                } catch (getError) {
+                    console.error('GET Error:', getError);
+                    
+                    // Method 3: Iframe fallback (paling kompatibel)
+                    try {
+                        const iframeParams = new URLSearchParams();
+                        iframeParams.append('type', data.type);
+                        iframeParams.append('tanggal', data.tanggal);
+                        iframeParams.append('nama', data.nama);
+                        iframeParams.append('jamMasuk', data.jamMasuk || '');
+                        iframeParams.append('jamPulang', data.jamPulang || '');
+                        iframeParams.append('keterangan', data.keterangan || '');
+                        iframeParams.append('izinSakit', data.izinSakit || '');
+                        
+                        const iframeUrl = `${SCRIPT_URL}?${iframeParams.toString()}`;
+                        console.log('Mencoba Iframe URL:', iframeUrl);
+                        
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.style.width = '1px';
+                        iframe.style.height = '1px';
+                        iframe.src = iframeUrl;
+                        
+                        document.body.appendChild(iframe);
+                        
+                        setTimeout(() => {
+                            document.body.removeChild(iframe);
+                            showNotification('Berhasil Dikirim!', 'Data absensi telah tersimpan (Iframe)', 'success');
+                            console.log('Data berhasil dikirim via Iframe');
+                        }, 3000);
+                        
+                    } catch (iframeError) {
+                        console.error('Iframe Error:', iframeError);
+                        showNotification('Gagal Menyimpan!', 'Semua metode gagal. Periksa koneksi internet.', 'error');
+                    }
+                }
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('btnTimeIn').addEventListener('click', function() {
+            const employeeSelect = document.getElementById('employeeName');
+            if (!employeeSelect.value) {
+                showNotification('Peringatan!', 'Pilih nama terlebih dahulu', 'error');
+                return;
+            }
+            
+            const [name, position] = employeeSelect.value.split('|');
+            const keteranganMasuk = document.getElementById('keteranganMasuk').value;
+            const data = {
+                type: 'timeIn',
+                tanggal: document.getElementById('dateIn').value,
+                nama: name,
+                jamMasuk: document.getElementById('timeIn').value,
+                jamPulang: '',
+                keterangan: keteranganMasuk,
+                izinSakit: ''
+            };
+            
+            sendToSheets(data);
+            document.getElementById('keteranganMasuk').value = '';
+        });
+        
+        document.getElementById('btnTimeOut').addEventListener('click', function() {
+            const employeeSelect = document.getElementById('employeeName');
+            if (!employeeSelect.value) {
+                showNotification('Peringatan!', 'Pilih nama terlebih dahulu', 'error');
+                return;
+            }
+            
+            const [name, position] = employeeSelect.value.split('|');
+            const keteranganPulang = document.getElementById('keteranganPulang').value;
+            const data = {
+                type: 'timeOut',
+                tanggal: document.getElementById('dateOut').value,
+                nama: name,
+                jamMasuk: '',
+                jamPulang: document.getElementById('timeOut').value,
+                keterangan: keteranganPulang,
+                izinSakit: ''
+            };
+            
+            sendToSheets(data);
+            document.getElementById('keteranganPulang').value = '';
+        });
+        
+
+        
+        document.getElementById('btnIzinSakit').addEventListener('click', function() {
+            const employeeSelect = document.getElementById('employeeName');
+            const izinSakit = document.getElementById('izinSakit').value;
+            
+            if (!employeeSelect.value) {
+                showNotification('Peringatan!', 'Pilih nama terlebih dahulu', 'error');
+                return;
+            }
+            
+            if (!izinSakit.trim()) {
+                showNotification('Peringatan!', 'Masukkan ajuan izin/sakit terlebih dahulu', 'error');
+                return;
+            }
+            
+            const [name, position] = employeeSelect.value.split('|');
+            const data = {
+                type: 'izinSakit',
+                tanggal: document.getElementById('dateIn').value,
+                nama: name,
+                jamMasuk: '',
+                jamPulang: '',
+                keterangan: '',
+                izinSakit: izinSakit
+            };
+            
+            sendToSheets(data);
+            document.getElementById('izinSakit').value = '';
+        });
+        
+        // Initialize clock
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96b6f51eb1ad8198',t:'MTc1NDU3MTYzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
